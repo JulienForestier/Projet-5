@@ -1,6 +1,6 @@
 export class Basket {
   constructor() {
-    let basket = localStorage.getItem("panier");
+    let basket = localStorage.getItem("basket");
     if (basket == null) {
       this.basket = [];
     } else {
@@ -10,7 +10,7 @@ export class Basket {
   save() {
     localStorage.setItem("basket", JSON.stringify(this.basket));
   }
-  add() {
+  add(product) {
     let foundProduct = this.basket.find(
       (p) => p.id == product.id && p.color == product.color
     );

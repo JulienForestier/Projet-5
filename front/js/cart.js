@@ -1,17 +1,23 @@
+import { Basket } from "./class/basket.js";
+
 const cartItems = document.getElementById("cart__items");
-let basket = JSON.parse(localStorage.getItem("basket"));
-let panier = [];
+const totalQuantity = document.getElementById("totalQuantity");
+const totalPrice = document.getElementById("totalPrice");
+
+let basket = new Basket();
+console.log(basket);
 
 function basketDisplay(basket) {
   cartItems.innerHTML = basket.map((product) => {
     return `
     <article class="cart__item" data-id="${product.id}" data-color=${product.color}>
      <div class="cart__item__img">
-                  <img src=${product.imageUrl} alt=${product.altTxt}>
+                  <img src=${product.img} alt=${product.altTxt}>
                 </div>
                 <div class="cart__item__content">
                   <div class="cart__item__content__description">
                     <h2>${product.name}</h2>
+                    <p>${product.color}</p>
                     <p>${product.price}</p>
                   </div>
                   <div class="cart__item__content__settings">
