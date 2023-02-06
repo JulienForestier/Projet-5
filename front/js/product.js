@@ -49,10 +49,6 @@ addBtn.addEventListener("click", (e) => {
     id: id,
     quantity: quantity.value,
     color: select.value,
-    price: price.innerText,
-    name: title.innerText,
-    img: document.getElementById("kanapImg").src,
-    altTxt: document.getElementById("kanapImg").alt,
   };
 
   if (select.value == "") {
