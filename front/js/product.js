@@ -77,6 +77,7 @@ function kanapDisplay(kanap) {
   let img = document.createElement("img");
   img.src = kanap.imageUrl;
   img.alt = kanap.altTxt;
+  img.setAttribute("id", "kanapImg");
   itemImg.appendChild(img);
   title.textContent = kanap.name;
   price.textContent = kanap.price;
@@ -96,7 +97,12 @@ addBtn.addEventListener("click", (e) => {
     id: id,
     quantity: quantity.value,
     color: select.value,
+    price: price.innerText,
+    name: title.innerText,
+    img: document.getElementById("kanapImg").src,
+    altTxt: document.getElementById("kanapImg").alt,
   };
+
   if (select.value == "") {
     alert("veuillez séléctionner une couleur");
   } else if (quantity.value <= 0 || quantity.value > 100) {
