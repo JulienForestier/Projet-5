@@ -47,7 +47,7 @@ window.addEventListener("load", fetchKanapById(id));
 addBtn.addEventListener("click", (e) => {
   let jsonKanap = {
     id: id,
-    quantity: quantity.value,
+    quantity: parseInt(quantity.value),
     color: select.value,
   };
 
