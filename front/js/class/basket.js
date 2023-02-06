@@ -15,9 +15,9 @@ export class Basket {
       (p) => p.id == product.id && p.color == product.color
     );
     if (foundProduct != undefined) {
-      foundProduct.quantity++;
+      foundProduct.quantity = product.quantity;
     } else {
-      product.quantity = 1;
+      product.quantity = product.quantity;
       this.basket.push(product);
     }
     this.save();
