@@ -28,10 +28,9 @@ function kanapDisplay(kanap) {
   let img = document.createElement("img");
   img.src = kanap.imageUrl;
   img.alt = kanap.altTxt;
-  img.setAttribute("id", "kanapImg");
   itemImg.appendChild(img);
   title.textContent = kanap.name;
-  price.textContent = kanap.price;
+  price.textContent = new Intl.NumberFormat().format(kanap.price);
   description.textContent = kanap.description;
 
   kanap.colors.forEach((color) => {

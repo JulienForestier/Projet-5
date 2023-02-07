@@ -14,8 +14,16 @@ export class Basket {
     let foundProduct = this.basket.find(
       (p) => p.id == product.id && p.color == product.color
     );
-    if (foundProduct != undefined) {
+    if (
+      foundProduct != undefined &&
+      foundProduct.quantity + product.quantity <= 100
+    ) {
       foundProduct.quantity += product.quantity;
+    } else if (
+      foundProduct != undefined &&
+      foundProduct.quantity + product.quantity >= 100
+    ) {
+      alert("vous avez atteind la quantité maximale");
     } else {
       product.quantity = product.quantity;
       this.basket.push(product);
