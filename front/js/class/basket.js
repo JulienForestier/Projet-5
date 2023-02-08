@@ -30,29 +30,26 @@ export class Basket {
     }
     this.save();
   }
-  remove(product) {
-    this.basket = this.basket.filter(
-      (p) => p.id != product.id && p.color != product.color
-    );
+  remove(id, color) {
+    this.basket = this.basket.filter((p) => p.id != id && p.color != color);
     this.save();
   }
-  changeQuantity(product, quantity) {
-    let foundProduct = this.basket.find(
-      (p) => p.id == product.id && p.color == product.color
-    );
+  changeQuantity(id, color, quantity) {
+    let foundProduct = this.basket.find((p) => p.id == id && p.color == color);
     if (foundProduct != undefined) {
-      foundProduct.quantity += quantity;
-      if (foundProduct <= 0) {
+      foundProduct.quantity = quantity;
+      if (foundProduct.quantity <= 0) {
         this.remove(foundProduct);
       }
     } else {
       this.save();
     }
+    this.save();
   }
   getNumberProduct() {
     let number = 0;
     for (let product of this.basket) {
-      number += product.quantity;
+      number += parseInt(product.quantity);
     }
     return number;
   }
