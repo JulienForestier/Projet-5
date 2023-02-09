@@ -27,7 +27,10 @@ export class Basket {
   }
 
   remove(id, color) {
-    this.basket = this.basket.filter((p) => p.id !== id && p.color !== color);
+    this.basket = this.basket.filter(
+      (p) =>
+        (p.id !== id && p.color !== color) || (p.id == id && p.color != color)
+    );
     this.save();
   }
 
@@ -38,6 +41,10 @@ export class Basket {
     if (foundProduct) {
       if (quantity <= 0) {
         this.remove(id, color);
+      } else if (quantity >= 100) {
+        alert("Vous avez atteind la qunatité maximale");
+        foundProduct.quantity = 100;
+        quantity = 100;
       } else {
         foundProduct.quantity = quantity;
         this.save();

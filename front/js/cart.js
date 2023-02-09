@@ -28,6 +28,12 @@ function changeEvent(id, color, quantity) {
   update();
 }
 
+function deleteKanap(id, color, article) {
+  basket.remove(id, color);
+  article.remove();
+  update();
+}
+
 async function update() {
   let total = 0;
   for (const product of basket.basket) {
@@ -107,14 +113,9 @@ function basketDisplay(data, color, quantity) {
   const pDelete = document.createElement("p");
   pDelete.classList.add("deleteItem");
   pDelete.textContent = "Supprimer";
-  pDelete.addEventListener(
-    "click",
-    basket.remove.bind(basket, article.dataset.id, article.dataset.color)
+  pDelete.addEventListener("click", () =>
+    deleteKanap(article.dataset.id, article.dataset.color, article)
   );
-  pDelete.addEventListener("click", () => {
-    article.remove();
-    update();
-  });
 
   cartItemContentSettingsDelete.appendChild(pDelete);
 }
