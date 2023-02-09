@@ -23,6 +23,21 @@ async function getBasket() {
   totalPrice.textContent = new Intl.NumberFormat().format(total);
 }
 
+function changeEvent(id, color, quantity) {
+  basket.changeQuantity(id, color, quantity);
+  update();
+}
+
+async function update() {
+  let total = 0;
+  for (const product of basket.basket) {
+    const data = await fetchData(product.id);
+    total += data.price * product.quantity;
+  }
+  totalPrice.textContent = new Intl.NumberFormat().format(total);
+  totalQuantity.textContent = basket.getNumberProduct();
+}
+
 function basketDisplay(data, color, quantity) {
   const article = document.createElement("article");
   article.classList.add("cart__item");
@@ -96,23 +111,12 @@ function basketDisplay(data, color, quantity) {
     "click",
     basket.remove.bind(basket, article.dataset.id, article.dataset.color)
   );
+  pDelete.addEventListener("click", () => {
+    article.remove();
+    update();
+  });
 
   cartItemContentSettingsDelete.appendChild(pDelete);
-}
-
-function changeEvent(id, color, quantity) {
-  basket.changeQuantity(id, color, quantity);
-  update();
-}
-
-async function update() {
-  let total = 0;
-  for (const product of basket.basket) {
-    const data = await fetchData(product.id);
-    total += data.price * product.quantity;
-  }
-  totalPrice.textContent = new Intl.NumberFormat().format(total);
-  totalQuantity.textContent = basket.getNumberProduct();
 }
 
 getBasket();
