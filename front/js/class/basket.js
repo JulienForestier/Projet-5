@@ -42,9 +42,9 @@ export class Basket {
       if (quantity <= 0) {
         this.remove(id, color);
       } else if (quantity >= 100) {
-        alert("Vous avez atteind la qunatité maximale");
+        alert("Vous avez atteind la qunatité maximale de 100");
         foundProduct.quantity = 100;
-        quantity = 100;
+        itemQuantity.value = 100;
       } else {
         foundProduct.quantity = quantity;
         this.save();

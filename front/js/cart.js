@@ -3,8 +3,19 @@ import { Basket } from "./class/basket.js";
 const cartItems = document.getElementById("cart__items");
 const totalQuantity = document.getElementById("totalQuantity");
 const totalPrice = document.getElementById("totalPrice");
+const firstName = document.getElementById("firstName");
+const lastName = document.getElementById("lastName");
+const address = document.getElementById("address");
+const city = document.getElementById("city");
+const email = document.getElementById("email");
+const order = document.getElementById("order");
 
 let basket = new Basket();
+let firstNameChecked;
+let lastNameChecked;
+let emailChecked;
+let cityChecked;
+let adressChecked;
 
 async function fetchData(productId) {
   const res = await fetch(`http://localhost:3000/api/products/${productId}`);
@@ -120,4 +131,114 @@ function basketDisplay(data, color, quantity) {
   cartItemContentSettingsDelete.appendChild(pDelete);
 }
 
+const regex = /^[A-Za-z\-\é\è\'\s]{3,20}$/;
+
+const checkFirstName = (firstName) => {
+  if (regex.test(firstName) != true) {
+    const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+    firstNameErrorMsg.innerText =
+      "le Prénom doit contenir au minimun 3 lettres et ne doit pas contenir de chiffre";
+  } else {
+    firstNameErrorMsg.innerText = "";
+    return true;
+  }
+};
+const checkLastName = (lastName) => {
+  if (regex.test(lastName) != true) {
+    const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+    lastNameErrorMsg.innerText =
+      "le Nom doit contenir au minimun 3 lettres et ne doit pas contenir de chiffre";
+  } else {
+    lastNameErrorMsg.innerText = "";
+    return true;
+  }
+};
+const checkEmail = (email) => {
+  if (/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/.test(email) != true) {
+    const emailErrorMsg = document.getElementById("emailErrorMsg");
+    emailErrorMsg.innerText = "l'email n'est pas valide";
+  } else {
+    emailErrorMsg.innerText = "";
+    return true;
+  }
+};
+const checkAdress = (adress) => {
+  if (/^[A-Za-z0-9\s\'\é\è]{10,50}$/.test(adress) != true) {
+    const addressErrorMsg = document.getElementById("addressErrorMsg");
+    addressErrorMsg.innerText = "L'adresse n'est pas valide";
+  } else {
+    addressErrorMsg.innerText = "";
+    return true;
+  }
+};
+
+const checkCity = (city) => {
+  if (regex.test(city) != true) {
+    const cityErrorMsg = document.getElementById("cityErrorMsg");
+    cityErrorMsg.innerText = "la ville n'est pas valide";
+  } else {
+    cityErrorMsg.innerText = "";
+    return true;
+  }
+};
+
+firstName.addEventListener("input", (e) => {
+  firstNameChecked = checkFirstName(e.target.value);
+});
+
+lastName.addEventListener("input", (e) => {
+  lastNameChecked = checkLastName(e.target.value);
+});
+
+address.addEventListener("input", (e) => {
+  adressChecked = checkAdress(e.target.value);
+});
+
+city.addEventListener("input", (e) => {
+  cityChecked = checkCity(e.target.value);
+});
+
+email.addEventListener("input", (e) => {
+  emailChecked = checkEmail(e.target.value);
+});
+
+order.addEventListener("click", (e) => {
+  e.preventDefault();
+  let contact = {
+    firstName: firstName.value,
+    lastName: lastName.value,
+    address: address.value,
+    city: city.value,
+    email: email.value,
+  };
+
+  if (basket.basket == []) {
+    alert("Votre panier est vide");
+  } else if (
+    firstNameChecked == true &&
+    lastNameChecked == true &&
+    adressChecked == true &&
+    cityChecked == true &&
+    emailChecked == true &&
+    basket.basket != []
+  ) {
+    sendOrder(contact);
+  } else {
+    alert("veuillez remplir le formulaire de contact");
+  }
+});
+
 getBasket();
+
+async function sendOrder(contact) {
+  const r = await fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "applicaion/json",
+    },
+    body: JSON.stringify(contact, basket.basket),
+  })
+    .then((order) => (order = r.json()))
+    .then(console.log(order.orderId));
+}
