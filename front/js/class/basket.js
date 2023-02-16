@@ -44,7 +44,6 @@ export class Basket {
       } else if (quantity >= 100) {
         alert("Vous avez atteind la qunatité maximale de 100");
         foundProduct.quantity = 100;
-        itemQuantity.value = 100;
       } else {
         foundProduct.quantity = quantity;
         this.save();

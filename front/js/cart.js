@@ -55,6 +55,8 @@ async function update() {
   totalQuantity.textContent = basket.getNumberProduct();
 }
 
+async function sendOrder(order) {}
+
 function basketDisplay(data, color, quantity) {
   const article = document.createElement("article");
   article.classList.add("cart__item");
@@ -111,7 +113,12 @@ function basketDisplay(data, color, quantity) {
   itemQuantity.value = quantity;
   cartItemContentSettingsQuantity.appendChild(itemQuantity);
   itemQuantity.addEventListener("change", (e) =>
-    changeEvent(article.dataset.id, article.dataset.color, e.target.value)
+    changeEvent(
+      article.dataset.id,
+      article.dataset.color,
+      e.target.value,
+      itemQuantity
+    )
   );
 
   const cartItemContentSettingsDelete = document.createElement("div");
@@ -138,6 +145,7 @@ const checkFirstName = (firstName) => {
     const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
     firstNameErrorMsg.innerText =
       "le Prénom doit contenir au minimun 3 lettres et ne doit pas contenir de chiffre";
+    return false;
   } else {
     firstNameErrorMsg.innerText = "";
     return true;
@@ -148,6 +156,7 @@ const checkLastName = (lastName) => {
     const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
     lastNameErrorMsg.innerText =
       "le Nom doit contenir au minimun 3 lettres et ne doit pas contenir de chiffre";
+    return false;
   } else {
     lastNameErrorMsg.innerText = "";
     return true;
@@ -157,6 +166,7 @@ const checkEmail = (email) => {
   if (/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/.test(email) != true) {
     const emailErrorMsg = document.getElementById("emailErrorMsg");
     emailErrorMsg.innerText = "l'email n'est pas valide";
+    return false;
   } else {
     emailErrorMsg.innerText = "";
     return true;
@@ -166,6 +176,7 @@ const checkAdress = (adress) => {
   if (/^[A-Za-z0-9\s\'\é\è]{10,50}$/.test(adress) != true) {
     const addressErrorMsg = document.getElementById("addressErrorMsg");
     addressErrorMsg.innerText = "L'adresse n'est pas valide";
+    return false;
   } else {
     addressErrorMsg.innerText = "";
     return true;
@@ -176,6 +187,7 @@ const checkCity = (city) => {
   if (regex.test(city) != true) {
     const cityErrorMsg = document.getElementById("cityErrorMsg");
     cityErrorMsg.innerText = "la ville n'est pas valide";
+    return false;
   } else {
     cityErrorMsg.innerText = "";
     return true;
@@ -210,9 +222,15 @@ order.addEventListener("click", (e) => {
     address: address.value,
     city: city.value,
     email: email.value,
-    products: [basket.basket],
   };
-
+  let productId = [];
+  basket.basket.forEach((product) => {
+    productId.push(product.id);
+  });
+  const order = {
+    contact: contact,
+    products: productId,
+  };
   if (basket.basket == []) {
     alert("Votre panier est vide");
   } else if (
@@ -223,23 +241,21 @@ order.addEventListener("click", (e) => {
     emailChecked == true &&
     basket.basket != []
   ) {
-    sendOrder(contact);
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "applicaion/json",
+      },
+      body: JSON.stringify(order),
+    })
+      .then((data) => data.json())
+      .then((orderInfo) => {
+        location.href = `./confirmation.html?id=${orderInfo.orderId}`;
+      });
   } else {
     alert("veuillez remplir correctement le formulaire de contact");
   }
 });
 
 getBasket();
-
-async function sendOrder(contact) {
-  const r = await fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "applicaion/json",
-    },
-    body: JSON.stringify(contact),
-  })
-    .then((order) => (order = r.json()))
-    .then(console.log(order.orderId));
-}
