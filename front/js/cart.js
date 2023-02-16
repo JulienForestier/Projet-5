@@ -210,6 +210,7 @@ order.addEventListener("click", (e) => {
     address: address.value,
     city: city.value,
     email: email.value,
+    products: [basket.basket],
   };
 
   if (basket.basket == []) {
@@ -224,7 +225,7 @@ order.addEventListener("click", (e) => {
   ) {
     sendOrder(contact);
   } else {
-    alert("veuillez remplir le formulaire de contact");
+    alert("veuillez remplir correctement le formulaire de contact");
   }
 });
 
@@ -237,7 +238,7 @@ async function sendOrder(contact) {
       Accept: "application/json",
       "Content-Type": "applicaion/json",
     },
-    body: JSON.stringify(contact, basket.basket),
+    body: JSON.stringify(contact),
   })
     .then((order) => (order = r.json()))
     .then(console.log(order.orderId));
