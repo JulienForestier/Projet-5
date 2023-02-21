@@ -17,11 +17,13 @@ let emailChecked;
 let cityChecked;
 let adressChecked;
 
+// fonction qui récupére les données d'un produit
 async function fetchData(productId) {
   const res = await fetch(`http://localhost:3000/api/products/${productId}`);
   return await res.json();
 }
 
+// Fonction qui me sert de base a l'arrivé sur la page panier. Elle trie mon panier dans l'ordre des id, elle calcule le prix total, elle utilise ma fonction pour avoir le nombre de produit total et utilise ma fonction d'afficahe.
 async function getBasket() {
   basket.basket.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   let total = 0;
@@ -34,17 +36,20 @@ async function getBasket() {
   totalPrice.textContent = new Intl.NumberFormat().format(total);
 }
 
+// Fontion qui me sert au changement de qunatité a mettre a jour le nombre total de produit et le prix
 function changeEvent(id, color, quantity) {
   basket.changeQuantity(id, color, quantity);
   update();
 }
 
+// fonction de suppression qui a la suppression met a jour le prix et le nombre de produits
 function deleteKanap(id, color, article) {
   basket.remove(id, color);
   article.remove();
   update();
 }
 
+// fonction qui met a jour le nombre de produit et et le prix total
 async function update() {
   let total = 0;
   for (const product of basket.basket) {
@@ -55,8 +60,7 @@ async function update() {
   totalQuantity.textContent = basket.getNumberProduct();
 }
 
-async function sendOrder(order) {}
-
+// fonction d'affichage du panier
 function basketDisplay(data, color, quantity) {
   const article = document.createElement("article");
   article.classList.add("cart__item");
@@ -112,14 +116,12 @@ function basketDisplay(data, color, quantity) {
   itemQuantity.max = "100";
   itemQuantity.value = quantity;
   cartItemContentSettingsQuantity.appendChild(itemQuantity);
-  itemQuantity.addEventListener("change", (e) =>
-    changeEvent(
-      article.dataset.id,
-      article.dataset.color,
-      e.target.value,
-      itemQuantity
-    )
-  );
+  itemQuantity.addEventListener("change", (e) => {
+    changeEvent(article.dataset.id, article.dataset.color, e.target.value);
+    if (itemQuantity.value >= 100) {
+      return (itemQuantity.value = 100);
+    }
+  });
 
   const cartItemContentSettingsDelete = document.createElement("div");
   cartItemContentSettingsDelete.classList.add(
@@ -163,7 +165,7 @@ const checkLastName = (lastName) => {
   }
 };
 const checkEmail = (email) => {
-  if (/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/.test(email) != true) {
+  if (/^[\w\-\_\.]+@[\w-]+\.[a-z]{2,4}$/.test(email) != true) {
     const emailErrorMsg = document.getElementById("emailErrorMsg");
     emailErrorMsg.innerText = "l'email n'est pas valide";
     return false;
@@ -216,45 +218,49 @@ email.addEventListener("input", (e) => {
 
 order.addEventListener("click", (e) => {
   e.preventDefault();
-  let contact = {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    address: address.value,
-    city: city.value,
-    email: email.value,
-  };
-  let productId = [];
-  basket.basket.forEach((product) => {
-    productId.push(product.id);
-  });
-  const order = {
-    contact: contact,
-    products: productId,
-  };
-  if (basket.basket == []) {
-    alert("Votre panier est vide");
-  } else if (
-    firstNameChecked == true &&
-    lastNameChecked == true &&
-    adressChecked == true &&
-    cityChecked == true &&
-    emailChecked == true &&
-    basket.basket != []
-  ) {
-    fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "applicaion/json",
-      },
-      body: JSON.stringify(order),
-    })
-      .then((data) => data.json())
-      .then((orderInfo) => {
-        location.href = `./confirmation.html?id=${orderInfo.orderId}`;
+  if (basket.basket != 0) {
+    if (
+      firstNameChecked &&
+      lastNameChecked &&
+      adressChecked &&
+      cityChecked &&
+      emailChecked
+    ) {
+      let contact = {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value,
+      };
+
+      let productId = [];
+      basket.basket.forEach((product) => {
+        productId.push(product.id);
       });
+
+      const order = {
+        contact: contact,
+        products: productId,
+      };
+
+      fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(order),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((data) => data.json())
+        .then((orderInfo) => {
+          location.href = `./confirmation.html?id=${orderInfo.orderId}`;
+        });
+    } else {
+      alert("veuillez remplir correctement le formulaire de contact");
+    }
   } else {
-    alert("veuillez remplir correctement le formulaire de contact");
+    alert("Votre panier est vide");
   }
 });
 
