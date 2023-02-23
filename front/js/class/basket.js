@@ -1,3 +1,4 @@
+// Class qui gére le panier en local storage avec ses méthodes attenantes: ajout, changement, suppression, nombre de produits
 export class Basket {
   constructor() {
     this.basket = JSON.parse(localStorage.getItem("basket")) || [];
@@ -11,7 +12,7 @@ export class Basket {
     let foundProduct = this.basket.find(
       (p) => p.id === product.id && p.color === product.color
     );
-    if (foundProduct != undefined) {
+    if (foundProduct !== undefined) {
       if (foundProduct.quantity + product.quantity <= 100) {
         foundProduct.quantity += product.quantity;
         this.save();
@@ -29,7 +30,7 @@ export class Basket {
   remove(id, color) {
     this.basket = this.basket.filter(
       (p) =>
-        (p.id !== id && p.color !== color) || (p.id == id && p.color != color)
+        (p.id !== id && p.color !== color) || (p.id === id && p.color !== color)
     );
     this.save();
   }

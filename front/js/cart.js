@@ -17,13 +17,13 @@ let emailChecked;
 let cityChecked;
 let adressChecked;
 
-// fonction qui récupére les données d'un produit
+// fonction qui récupère les données d'un produit à l'aide d'un fetch
 async function fetchData(productId) {
   const res = await fetch(`http://localhost:3000/api/products/${productId}`);
   return await res.json();
 }
 
-// Fonction qui me sert de base a l'arrivé sur la page panier. Elle trie mon panier dans l'ordre des id, elle calcule le prix total, elle utilise ma fonction pour avoir le nombre de produit total et utilise ma fonction d'afficahe.
+// Fonction qui me sert de base à l'arrivée sur la page panier. Elle trie mon panier dans l'ordre des id, elle calcule le prix total, elle utilise ma fonction pour avoir le nombre de produit total et utilise ma fonction d'affichage.
 async function getBasket() {
   basket.basket.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
   let total = 0;
@@ -36,20 +36,20 @@ async function getBasket() {
   totalPrice.textContent = new Intl.NumberFormat().format(total);
 }
 
-// Fontion qui me sert au changement de qunatité a mettre a jour le nombre total de produit et le prix
+// Fontion qui me sert au changement de quantité, à mettre à jour le nombre total de produit et le prix
 function changeEvent(id, color, quantity) {
   basket.changeQuantity(id, color, quantity);
   update();
 }
 
-// fonction de suppression qui a la suppression met a jour le prix et le nombre de produits
+// fonction de suppression qui à la suppression met à jour le prix et le nombre de produits
 function deleteKanap(id, color, article) {
   basket.remove(id, color);
   article.remove();
   update();
 }
 
-// fonction qui met a jour le nombre de produit et et le prix total
+// fonction qui met à jour le nombre de produit et le prix total
 async function update() {
   let total = 0;
   for (const product of basket.basket) {
@@ -60,7 +60,7 @@ async function update() {
   totalQuantity.textContent = basket.getNumberProduct();
 }
 
-// fonction d'affichage du panier
+// fonction d'affichage du panier, je crée des élements et je leur donne les id et class que l'on a dans HTML
 function basketDisplay(data, color, quantity) {
   const article = document.createElement("article");
   article.classList.add("cart__item");
@@ -142,8 +142,9 @@ function basketDisplay(data, color, quantity) {
 
 const regex = /^[A-Za-z\-\é\è\'\s]{3,20}$/;
 
+// fonction qui gére la validation du prénom et return un boolean
 const checkFirstName = (firstName) => {
-  if (regex.test(firstName) != true) {
+  if (regex.test(firstName) !== true) {
     const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
     firstNameErrorMsg.innerText =
       "le Prénom doit contenir au minimun 3 lettres et ne doit pas contenir de chiffre";
@@ -153,8 +154,9 @@ const checkFirstName = (firstName) => {
     return true;
   }
 };
+// fonction qui gére la validation du nom et return un boolean
 const checkLastName = (lastName) => {
-  if (regex.test(lastName) != true) {
+  if (regex.test(lastName) !== true) {
     const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
     lastNameErrorMsg.innerText =
       "le Nom doit contenir au minimun 3 lettres et ne doit pas contenir de chiffre";
@@ -164,8 +166,9 @@ const checkLastName = (lastName) => {
     return true;
   }
 };
+// fonction qui gére la validation de l'email et return un boolean
 const checkEmail = (email) => {
-  if (/^[\w\-\_\.]+@[\w-]+\.[a-z]{2,4}$/.test(email) != true) {
+  if (/^[\w\-\_\.]+@[\w-]+\.[a-z]{2,4}$/.test(email) !== true) {
     const emailErrorMsg = document.getElementById("emailErrorMsg");
     emailErrorMsg.innerText = "l'email n'est pas valide";
     return false;
@@ -174,8 +177,9 @@ const checkEmail = (email) => {
     return true;
   }
 };
+// fonction qui gére la validation de l'adresse et return un boolean
 const checkAdress = (adress) => {
-  if (/^[A-Za-z0-9\s\'\é\è]{10,50}$/.test(adress) != true) {
+  if (/^[A-Za-z0-9\s\'\é\è]{10,50}$/.test(adress) !== true) {
     const addressErrorMsg = document.getElementById("addressErrorMsg");
     addressErrorMsg.innerText = "L'adresse n'est pas valide";
     return false;
@@ -184,9 +188,9 @@ const checkAdress = (adress) => {
     return true;
   }
 };
-
+// fonction qui gére la validation de la ville et return un boolean
 const checkCity = (city) => {
-  if (regex.test(city) != true) {
+  if (regex.test(city) !== true) {
     const cityErrorMsg = document.getElementById("cityErrorMsg");
     cityErrorMsg.innerText = "la ville n'est pas valide";
     return false;
@@ -218,7 +222,7 @@ email.addEventListener("input", (e) => {
 
 order.addEventListener("click", (e) => {
   e.preventDefault();
-  if (basket.basket != 0) {
+  if (basket.basket !== 0) {
     if (
       firstNameChecked &&
       lastNameChecked &&

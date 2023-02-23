@@ -15,7 +15,7 @@ const id = urlSearch.searchParams.get("id");
 let kanap = {};
 let basket = new Basket();
 let option;
-
+// fonction qui récupère les données de l'API selon ID dans URL
 async function fetchKanapById(id) {
   await fetch(`http://localhost:3000/api/products/${id}`)
     .then((res) => res.json())
@@ -23,7 +23,7 @@ async function fetchKanapById(id) {
   kanapDisplay(kanap);
   console.log(kanap);
 }
-
+// fonction d'affichage du produit
 function kanapDisplay(kanap) {
   let img = document.createElement("img");
   img.src = kanap.imageUrl;
@@ -50,7 +50,7 @@ addBtn.addEventListener("click", (e) => {
     color: select.value,
   };
 
-  if (select.value == "") {
+  if (select.value === "") {
     alert("veuillez séléctionner une couleur");
   } else if (quantity.value <= 0 || quantity.value > 100) {
     alert("veuillez séléctionner une quantité entre 1 et 100");

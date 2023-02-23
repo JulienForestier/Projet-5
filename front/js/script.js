@@ -1,6 +1,6 @@
 const items = document.getElementById("items");
 let kanaps = [];
-
+// fonction qui récupére tout les produits
 async function fetchKanaps() {
   await fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
@@ -8,6 +8,7 @@ async function fetchKanaps() {
   kanapsDisplay();
 }
 
+// fonction qui map sur le tableau de produits pour faire l'affichage en innerHTML
 function kanapsDisplay() {
   items.innerHTML = kanaps
     .map(
