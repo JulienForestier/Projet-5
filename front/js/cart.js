@@ -120,6 +120,8 @@ function basketDisplay(data, color, quantity) {
     changeEvent(article.dataset.id, article.dataset.color, e.target.value);
     if (itemQuantity.value >= 100) {
       return (itemQuantity.value = 100);
+    } else if (itemQuantity.value <= 0) {
+      article.remove();
     }
   });
 
